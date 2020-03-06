@@ -1,0 +1,121 @@
+{
+   "header":{
+      "from":"/app/551099-ef1d9fe37442284be4a06684de36c43d/subscribe",
+      "messageId":"0579fbeab51dd2f0cafbfa7e2f086040",
+      "method":"SET",
+      "namespace":"Appliance.Control.ToggleX",
+      "payloadVersion":1,
+      "sign":"1e2a7537e849a6b9671ef8d8ffd8b13d",
+      "timestamp":1583420507
+   },
+   "payload":{
+      "togglex":{
+         "channel":0,
+         "onoff":1
+      }
+   }
+}{
+   "header":{
+      "from":"/app/551099-ef1d9fe37442284be4a06684de36c43d/subscribe",
+      "messageId":"0579fbeab51dd2f0cafbfa7e2f086040",
+      "method":"SET",
+      "namespace":"Appliance.Control.ToggleX",
+      "payloadVersion":1,
+      "sign":"1e2a7537e849a6b9671ef8d8ffd8b13d",
+      "timestamp":1583420507
+   },
+   "payload":{
+      "togglex":{
+         "channel":0,
+         "onoff":1
+      }
+   }
+}{
+   "header":{
+      "messageId":"0579fbeab51dd2f0cafbfa7e2f086040",
+      "namespace":"Appliance.Control.ToggleX",
+      "method":"SETACK",
+      "payloadVersion":1,
+      "from":"/appliance/1907186828259425184948e1e901429c/publish",
+      "timestamp":1583420507,
+      "timestampMs":632,
+      "sign":"1e2a7537e849a6b9671ef8d8ffd8b13d"
+   },
+   "payload":{
+
+   }
+}{
+   "header":{
+      "messageId":"0579fbeab51dd2f0cafbfa7e2f086040",
+      "namespace":"Appliance.Control.ToggleX",
+      "method":"SETACK",
+      "payloadVersion":1,
+      "from":"/appliance/1907186828259425184948e1e901429c/publish",
+      "timestamp":1583420507,
+      "timestampMs":632,
+      "sign":"1e2a7537e849a6b9671ef8d8ffd8b13d"
+   },
+   "payload":{
+
+   }
+}{
+   "header":{
+      "from":"/app/551099-ef1d9fe37442284be4a06684de36c43d/subscribe",
+      "messageId":"7ab9e0d11c72daee4a77f1e739d2b3c8",
+      "method":"SET",
+      "namespace":"Appliance.Control.ToggleX",
+      "payloadVersion":1,
+      "sign":"7f62139c5b22c7ac4e2a2f08d672b456",
+      "timestamp":1583420510
+   },
+   "payload":{
+      "togglex":{
+         "channel":0,
+         "onoff":0
+      }
+   }
+}{
+   "header":{
+      "from":"/app/551099-ef1d9fe37442284be4a06684de36c43d/subscribe",
+      "messageId":"7ab9e0d11c72daee4a77f1e739d2b3c8",
+      "method":"SET",
+      "namespace":"Appliance.Control.ToggleX",
+      "payloadVersion":1,
+      "sign":"7f62139c5b22c7ac4e2a2f08d672b456",
+      "timestamp":1583420510
+   },
+   "payload":{
+      "togglex":{
+         "channel":0,
+         "onoff":0
+      }
+   }
+}{
+   "header":{
+      "messageId":"7ab9e0d11c72daee4a77f1e739d2b3c8",
+      "namespace":"Appliance.Control.ToggleX",
+      "method":"SETACK",
+      "payloadVersion":1,
+      "from":"/appliance/1907186828259425184948e1e901429c/publish",
+      "timestamp":1583420510,
+      "timestampMs":239,
+      "sign":"7f62139c5b22c7ac4e2a2f08d672b456"
+   },
+   "payload":{
+
+   }
+}{
+   "header":{
+      "messageId":"7ab9e0d11c72daee4a77f1e739d2b3c8",
+      "namespace":"Appliance.Control.ToggleX",
+      "method":"SETACK",
+      "payloadVersion":1,
+      "from":"/appliance/1907186828259425184948e1e901429c/publish",
+      "timestamp":1583420510,
+      "timestampMs":239,
+      "sign":"7f62139c5b22c7ac4e2a2f08d672b456"
+   },
+   "payload":{
+
+   }
+}
