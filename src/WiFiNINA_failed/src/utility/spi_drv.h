@@ -61,6 +61,8 @@ public:
 
     static void waitForSlaveReady();
 
+    static bool waitForSlaveReady(unsigned long timeout);
+
     //static int waitSpiChar(char waitChar, char* readChar);
 
     static int waitSpiChar(unsigned char waitChar);

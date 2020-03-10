@@ -51,29 +51,39 @@ int WiFiClient::connect(const char* host, uint16_t port) {
 }
 
 int WiFiClient::connect(IPAddress ip, uint16_t port) {
+    return connect( ip, port, _connect_timeout);
+}
+int WiFiClient::connect(IPAddress ip, uint16_t port, unsigned long timeout) {
     if (_sock != NO_SOCKET_AVAIL)
     {
       stop();
     }
 
     _sock = ServerDrv::getSocket();
+    
     if (_sock != NO_SOCKET_AVAIL)
     {
-    	ServerDrv::startClient(uint32_t(ip), port, _sock);
-
-    	unsigned long start = millis();
-
-      while (!connected() && millis() - start < _connect_timeout)
+      if(!ServerDrv::startClientWithTimeOut(uint32_t(ip), port, _sock, timeout)){
+	Serial.println("ServerDrv::startClientWithTimeOut had timed Out, returning...");
+	return 0;
+      }
+       
+      unsigned long start = millis();
+      while (!connected() && millis() - start < timeout)
     		delay(1);
+      
+      if (!connected())
+      {
 
-    	if (!connected())
-       	{
-    		return 0;
-    	}
+        return 0;
+      }
     } else {
     	Serial.println("No Socket available");
     	return 0;
     }
+
+
+
     return 1;
 }
 

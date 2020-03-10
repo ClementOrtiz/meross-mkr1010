@@ -87,7 +87,12 @@ void ServerDrv::startServer(uint32_t ipAddress, uint16_t port, uint8_t sock, uin
 // Start server TCP on port specified
 void ServerDrv::startClient(uint32_t ipAddress, uint16_t port, uint8_t sock, uint8_t protMode)
 {
+	startClientWithTimeOut(ipAddress, port, sock, protMode);
+}
+bool ServerDrv::startClientWithTimeOut(uint32_t ipAddress, uint16_t port, uint8_t sock, unsigned long timeout, uint8_t protMode)
+{
 	WAIT_FOR_SLAVE_SELECT();
+	
     // Send Command
     SpiDrv::sendCmd(START_CLIENT_TCP_CMD, PARAM_NUMS_4);
     SpiDrv::sendParam((uint8_t*)&ipAddress, sizeof(ipAddress));
@@ -97,7 +102,10 @@ void ServerDrv::startClient(uint32_t ipAddress, uint16_t port, uint8_t sock, uin
 
     SpiDrv::spiSlaveDeselect();
     //Wait the reply elaboration
-    SpiDrv::waitForSlaveReady();
+    if(!SpiDrv::waitForSlaveReady(timeout)){
+		Serial.println("SpiDrv::waitForSlaveReady had timedout, returning...");
+		return false; // return on timeout
+	}
     SpiDrv::spiSlaveSelect();
 
     // Wait for reply
@@ -108,6 +116,7 @@ void ServerDrv::startClient(uint32_t ipAddress, uint16_t port, uint8_t sock, uin
         WARN("error waitResponse");
     }
     SpiDrv::spiSlaveDeselect();
+	return true;
 }
 
 void ServerDrv::startClient(const char* host, uint8_t host_len, uint32_t ipAddress, uint16_t port, uint8_t sock, uint8_t protMode)

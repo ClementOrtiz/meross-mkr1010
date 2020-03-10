@@ -37,6 +37,8 @@ public:
 
     static void startClient(uint32_t ipAddress, uint16_t port, uint8_t sock, uint8_t protMode=TCP_MODE);
 
+    static bool startClientWithTimeOut(uint32_t ipAddress, uint16_t port, uint8_t sock, unsigned long timeout=10000, uint8_t protMode=TCP_MODE);
+
     static void startClient(const char* host, uint8_t host_len, uint32_t ipAddress, uint16_t port, uint8_t sock, uint8_t protMode=TCP_MODE);
 
     static void stopClient(uint8_t sock);

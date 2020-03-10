@@ -212,6 +212,20 @@ void SpiDrv::waitForSlaveReady()
 	while (!waitSlaveReady());
 }
 
+bool SpiDrv::waitForSlaveReady(unsigned long timeout)
+{
+	bool isTimedOut = false;
+	unsigned long start = millis();
+	while (!waitSlaveReady() && !isTimedOut){
+		delay(1);
+		isTimedOut = millis() - start < timeout;
+	}
+	Serial.print("out from waiting loop, TimeOut? ");
+	Serial.println(isTimedOut);
+
+	return !isTimedOut;
+}
+
 void SpiDrv::getParam(uint8_t* param)
 {
     // Get Params data

@@ -66,7 +66,7 @@ int status = WL_IDLE_STATUS;
 #define REQUEST_TIMEOUT_RESPONSE 1    // Sending request has no response
 #define REQUEST_CONNECTION_FAILED 2   // Sending request failed to connect
 int portMSS210 = 80;                  // comon port for HTTP communication
-String serverMSS210 = "192.168.1.33"; // or IPAddress serverMSS210(192,168,1,183);
+IPAddress serverMSS210(192, 168, 1, 33); // or IPAddress serverMSS210(192,168,1,183);
 // Took from sniffed frames : (declared as String to simplify JSON integration)
 String MEROSS_APP_TOKEN = "551099-ef1d9fe37442284be4a06684de36c43d";
 String MEROSS_MSG_ID    = "bdf5a8a37e18f8261ce7623687efcc21";
@@ -107,17 +107,15 @@ void loop()
   switch( appMode ){
     case APPMODE_SEARCHING :{
       Serial.println( "Launching research of plug IP" );
-      WiFi.setConnectTimeout(500);
-      WiFi.test();
       IPAddress plugIP(0, 0, 0, 0);
       if( searchForIp( plugIP ) ){
-        serverMSS210 = (String) plugIP;
+        serverMSS210 = plugIP;
         appMode = APPMODE_ORDERING;
       }
       break;
     }
     case APPMODE_ORDERING :
-      WiFi.setConnectTimeout(2000);
+      myClient.setConnectTimeout(2000);
       onOffMode();
       break;
     default :
@@ -173,7 +171,7 @@ bool searchForIp( IPAddress &ipResult ){
             ipResult = ipTested;
             finded = true;
           }
-          delay(1000); // to avoid to flood network
+          //delay(1000); // to avoid to flood network
         }
       }
     }
@@ -237,14 +235,18 @@ bool testIpForFrameInjection( IPAddress ip ){
 * Launch a payload on the given IP and return true if the MEROSS_MSG_ID is found in the response.
 **/
 bool testPayLoadInjection( IPAddress ip ){
+//  unsigned long start = millis();
   String response = "";
-  int success = sendRequestToIp( (String)ip, false, response );
+  int success = sendRequestToIp( ip, false, response );
   if( success == REQUEST_OK ){
-      if( response.indexOf( MEROSS_MSG_ID ) > 0){
+      if( response.indexOf( MEROSS_APP_TOKEN ) > 0){
         Serial.println("Plug found");
         return true;
       }
   }
+//  unsigned long duration = millis() - start;
+//  Serial.print("testPayLoadInjection duration : ");
+//  Serial.println(duration);
 
   return false;
 }
@@ -276,7 +278,7 @@ void onOffMode(){
 /**
 * Send the full HTTP Meross' request to a defined IP
 **/
-int sendRequestToIp( String ip, boolean onOffStatus, String &response ){
+int sendRequestToIp( IPAddress ip, boolean onOffStatus, String &response ){
 
   String payload = preparePayLoad( onOffStatus );
 
@@ -336,17 +338,18 @@ String preparePayLoad( boolean onOffStatus ){
 /**
 * Technically send to IP the payload JSONDATA and retrieve the RESPONSE
 **/
-int sendFinalRequest( String ip, String jsonData, String & response ){
+int sendFinalRequest( IPAddress ip, String jsonData, String & response ){
   int cpt=0;
   // Format String IP to CharArray IP
-  char ipCharArray[15];
-  ip.toCharArray(ipCharArray, ip.length()+1);
+  //char ipCharArray[15];
+  //ip.toCharArray(ipCharArray, ip.length()+1);
 
   // reset previous connection
   myClient.stop();
 
   // If connection is successfull, load payload with HTTP header
-  if( myClient.connect( ipCharArray, portMSS210 )){
+  //myClient.setConnectTimeout(500);
+  if( myClient.connect( ip, portMSS210, 500 )){
     myClient.print( // any spaces are important
       String("POST ") + "/config" + " HTTP/1.1\r\n" +
       "Content-Type: application/json\r\n" +
