@@ -66,7 +66,7 @@ int status = WL_IDLE_STATUS;
 #define REQUEST_TIMEOUT_RESPONSE 1    // Sending request has no response
 #define REQUEST_CONNECTION_FAILED 2   // Sending request failed to connect
 int portMSS210 = 80;                  // comon port for HTTP communication
-IPAddress serverMSS210(192, 168, 1, 33); // or IPAddress serverMSS210(192,168,1,183);
+IPAddress serverMSS210(0, 0, 0, 0);   //(192, 168, 1, 33); // or IPAddress serverMSS210(192,168,1,183);
 // Took from sniffed frames : (declared as String to simplify JSON integration)
 String MEROSS_APP_TOKEN = "551099-ef1d9fe37442284be4a06684de36c43d";
 String MEROSS_MSG_ID    = "bdf5a8a37e18f8261ce7623687efcc21";
@@ -106,17 +106,27 @@ void loop()
 {
   switch( appMode ){
     case APPMODE_SEARCHING :{
+      Serial.println();
+      Serial.println( "=============================" );
       Serial.println( "Launching research of plug IP" );
       IPAddress plugIP(0, 0, 0, 0);
-      if( searchForIp( plugIP ) ){
+      WiFi.hostByName("Meross_Smart_Plug", plugIP);
+
+      if( plugIP[0] != 0 ){
+        Serial.print("Plug found at ");
+        Serial.print(plugIP);
+
         serverMSS210 = plugIP;
         appMode = APPMODE_ORDERING;
+        Serial.println();
+        Serial.println( "=============================" );
+        Serial.println("Application's now ordering plug");
       }
+
       break;
     }
     case APPMODE_ORDERING :
-      myClient.setConnectTimeout(2000);
-      onOffMode();
+     onOffMode();
       break;
     default :
       Serial.println("Unknow Mode, application will stop");
@@ -124,7 +134,7 @@ void loop()
   }
 
   // Checking WiFi connection
-  if( counterConnect > 1000){
+  if( counterConnect > 1000 ){
     // if not connected, relaunch
     if( WiFi.status() != WL_CONNECTED ){
       Serial.println("*** Warning ***\nWiFi Connection lost ... Trying to reconnect");
@@ -135,124 +145,9 @@ void loop()
   counterConnect++;
 }
 
-////////////////////
-// Search for IP Part
-
-bool searchForIp( IPAddress &ipResult ){
-
-
-  IPAddress localIp = WiFi.localIP();
-  IPAddress minIp = WiFi.localIP();
-  IPAddress maxIp = WiFi.localIP();
-  IPAddress subnet = WiFi.subnetMask();
-
-  // retrieve min and max ip from the subnet mask
-  int maskOffSet = basicIpRangeFromMaskAndLocalIp( localIp, subnet, minIp, maxIp );
-
-  if( isDebug ){
-    Serial.print("minIp: ");
-    Serial.print( minIp );
-    Serial.print(" maxIp: ");
-    Serial.println( maxIp );
-  }
-
-  // Clearest way to move around IP
-  // It's possible to do it with only one loop... but hard to undestand and debug
-  bool finded = false;
-  for (int ip1 = minIp[0]; ip1 <= maxIp[0] && !finded; ip1++) {
-    for (int ip2 = minIp[1]; ip2 <= maxIp[1] && !finded; ip2++) {
-      for (int ip3 = minIp[2]; ip3 <= maxIp[2] && !finded; ip3++) {
-        for (int ip4 = minIp[3]; ip4 <= maxIp[3] && !finded; ip4++) {
-          IPAddress ipTested (ip1, ip2, ip3, ip4);
-          Serial.print( "Testing : " );
-          Serial.println( ipTested );
-
-          if( testIpForFrameInjection( ipTested ) ){
-            ipResult = ipTested;
-            finded = true;
-          }
-          //delay(1000); // to avoid to flood network
-        }
-      }
-    }
-  }
-
-  return finded;
-}
-
-/**
-* As written in function name, a basic calculation of min and max IP from a local IP and a subnet.
-* Here we consider that a non zero digit on subnet mask refer to a 0.
-* As this, the calculated range will be larger than the real range and we'll don't forget ip that need to be scanned
-* return the offset of the zeroSubNetPos
-**/
-int basicIpRangeFromMaskAndLocalIp( IPAddress localIp, IPAddress subnet, IPAddress &minIp, IPAddress &maxIp ){
-  int maxSizeAdress = 4;
-  int zeroSubNetPos = maxSizeAdress;
-  // Search for '0' pos (==> really search for a none 255 to simplify subnet calculation)
-  for (int i = 0; i < maxSizeAdress; i++) {
-    if( subnet[i] != 255 ){
-      zeroSubNetPos = i;
-      break;
-    }
-  }
-
-  // formating minIp and maxIp
-  for (int i = 0; i < maxSizeAdress; i++) {
-    // if we haven't passed the 0 position on the subnet, basis adress is the same as localIp
-    if( i < zeroSubNetPos ){
-      minIp[i] = localIp[i];
-      maxIp[i] = localIp[i];
-    }else{
-      // if zeroSubNetPos is reach, min is 0 and max is 255
-      minIp[i] = 0;
-      maxIp[i] = 255;
-    }
-  }
-  return zeroSubNetPos;
-}
-
-/**
-* Send a ping to know if there's a host behind
-* and then send a "OFF frame" and analyse the data answer
-**/
-bool testIpForFrameInjection( IPAddress ip ){
-  // int result = WiFi.ping( ip );
-  // Serial.print( "ping result : " );
-  // Serial.print( result );
-  // Serial.print( " ==? " );
-  // Serial.println( WL_SUCCESS );
-  // if( result > 0 ){
-  //   Serial.print("Ping ok on ");
-  //   Serial.println(ip);
-    return testPayLoadInjection(ip);
-  // }
-  //
-  // return false;
-}
-
-/**
-* Launch a payload on the given IP and return true if the MEROSS_MSG_ID is found in the response.
-**/
-bool testPayLoadInjection( IPAddress ip ){
-//  unsigned long start = millis();
-  String response = "";
-  int success = sendRequestToIp( ip, false, response );
-  if( success == REQUEST_OK ){
-      if( response.indexOf( MEROSS_APP_TOKEN ) > 0){
-        Serial.println("Plug found");
-        return true;
-      }
-  }
-//  unsigned long duration = millis() - start;
-//  Serial.print("testPayLoadInjection duration : ");
-//  Serial.println(duration);
-
-  return false;
-}
 
 ////////////////////
-// Plug Manipulation Part
+// Plug ordering Part
 
 void onOffMode(){
   // Reading Button's pin state
@@ -349,7 +244,7 @@ int sendFinalRequest( IPAddress ip, String jsonData, String & response ){
 
   // If connection is successfull, load payload with HTTP header
   //myClient.setConnectTimeout(500);
-  if( myClient.connect( ip, portMSS210, 500 )){
+  if( myClient.connect( ip, portMSS210 )){
     myClient.print( // any spaces are important
       String("POST ") + "/config" + " HTTP/1.1\r\n" +
       "Content-Type: application/json\r\n" +
