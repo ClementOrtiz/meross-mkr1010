@@ -107,6 +107,8 @@ void loop()
   switch( appMode ){
     case APPMODE_SEARCHING :{
       Serial.println( "Launching research of plug IP" );
+      WiFi.setConnectTimeout(500);
+      WiFi.test();
       IPAddress plugIP(0, 0, 0, 0);
       if( searchForIp( plugIP ) ){
         serverMSS210 = (String) plugIP;
@@ -115,6 +117,7 @@ void loop()
       break;
     }
     case APPMODE_ORDERING :
+      WiFi.setConnectTimeout(2000);
       onOffMode();
       break;
     default :
@@ -165,7 +168,7 @@ bool searchForIp( IPAddress &ipResult ){
           IPAddress ipTested (ip1, ip2, ip3, ip4);
           Serial.print( "Testing : " );
           Serial.println( ipTested );
-          
+
           if( testIpForFrameInjection( ipTested ) ){
             ipResult = ipTested;
             finded = true;
@@ -216,18 +219,18 @@ int basicIpRangeFromMaskAndLocalIp( IPAddress localIp, IPAddress subnet, IPAddre
 * and then send a "OFF frame" and analyse the data answer
 **/
 bool testIpForFrameInjection( IPAddress ip ){
-  int result = WiFi.ping( ip );
-  Serial.print( "ping result : " );
-  Serial.print( result );
-  Serial.print( " ==? " );
-  Serial.println( WL_SUCCESS );
-  if( result > 0 ){
-    Serial.print("Ping ok on ");
-    Serial.println(ip);
+  // int result = WiFi.ping( ip );
+  // Serial.print( "ping result : " );
+  // Serial.print( result );
+  // Serial.print( " ==? " );
+  // Serial.println( WL_SUCCESS );
+  // if( result > 0 ){
+  //   Serial.print("Ping ok on ");
+  //   Serial.println(ip);
     return testPayLoadInjection(ip);
-  }
-
-  return false;
+  // }
+  //
+  // return false;
 }
 
 /**
