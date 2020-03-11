@@ -28,14 +28,18 @@
 #define REQUEST_CONNECTION_FAILED 2   // request failed to connect
 
 
-
+#include <Arduino.h>
 #include "IPAddress.h"
 #include "WiFiClient.h"
 
 class WifiInterrupt{
   private:
-    bool _isDebug;
+    int _port = 80;
+    bool _isDebug = false;
     WiFiClient _client;
+    String _merossAppToken;
+    String _merossMsgId;
+    String _merossSign;
 
     /*
      * Prepare the payload from contextuals parameters
@@ -43,20 +47,34 @@ class WifiInterrupt{
     String preparePayLoad( boolean onOffStatus );
 
   public:
-    WifiInterrupt( WiFiClient _client );
-    WifiInterrupt( WiFiClient _client, String merossAppToken, String merossMsgId, String merossSign );
+    WifiInterrupt( WiFiClient client );
+    WifiInterrupt( WiFiClient client, String merossAppToken, String merossMsgId, String merossSign );
+
+    /*
+     * Define if this lib will print on Serial
+     */
+    void setDebug( bool isDebug );
+
+    /*
+     * Define the conection port used to request
+     */
+    void setPort( int port );
 
     /*
      * Send Meross'specific Json request to a defined IP and retrieve the RESPONSE
      */
-    int sendSwitchWithMerossJson( IPAddress ip, boolean onOffStatus, String &response );
+    int sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus, String &response );
 
+    /*
+     * Send Meross'specific Json request to a defined IP and no matter the RESPONSE
+     */
+    int sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus );
 
     /*
      * Send given JSON to IP and retrieve the RESPONSE
      */
     int sendJsonRequest( IPAddress ip, String jsonData, String &response );
 
-}
+};
 
 #endif
