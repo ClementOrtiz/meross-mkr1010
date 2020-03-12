@@ -1,4 +1,3 @@
-
 #include "WiFi.h"
 #include "WifiTools.h"
 
@@ -17,7 +16,8 @@ void WifiTools::checkConnection(){
       if( _isDebug ){
         Serial.println("*** Warning ***\nWiFi Connection lost ... Trying to reconnect");
       }
-      connectToWifi( _ssid, _pass );
+
+      connectToWifi( _ssid.c_str(), _pass.c_str() );
     }
     _counterConnect = 0;
   }
@@ -25,10 +25,10 @@ void WifiTools::checkConnection(){
 }
 
 
-void WifiTools::connectToWifi( char ssid[] , char pass[] ){
+void WifiTools::connectToWifi( const char ssid[] , const char pass[] ){
   // store ids
-  strcpy(ssid, _ssid);
-  strcpy(pass, _pass);
+  _ssid = String( ssid );
+  _pass = String( pass );
 
   // check for the WiFi module:
   if (WiFi.status() == WL_NO_MODULE){

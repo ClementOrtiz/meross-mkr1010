@@ -27,8 +27,8 @@ class WifiTools{
   private:
     bool _isDebug = false;
     int _counterConnect = 0;
-    char _ssid[] ;
-    char _pass[];
+    String _ssid;
+    String _pass;
 
   public:
     /*
@@ -44,7 +44,7 @@ class WifiTools{
     /*
      * Launch a connection on the Hotspot specified
      */
-    void connectToWifi( char ssid[] , char pass[] );
+    void connectToWifi( const char ssid[] , const char pass[] );
 
     /*
      * Print subnet mask, local IP and MAC address
