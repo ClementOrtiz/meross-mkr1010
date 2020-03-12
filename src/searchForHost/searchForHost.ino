@@ -321,15 +321,14 @@ void printWifiData(){
 
   // print your board's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+  Serial.print(" IP Address: ");
+  Serial.print(ip);
 
   // print your MAC address:
   byte mac[6];
   WiFi.macAddress(mac);
   Serial.print("MAC address: ");
   printMacAddress(mac);
-  delay(1000);
 }
 
 void printCurrentNet(){
@@ -345,7 +344,7 @@ void printCurrentNet(){
 
   // print the received signal strength:
   long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
+  Serial.print("signal strength (RSSI): ");
   Serial.println(rssi);
 
   // print the encryption type:
