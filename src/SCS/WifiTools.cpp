@@ -1,9 +1,10 @@
+#include <EEPROM.h>
 #include "WiFi.h"
 #include "WifiTools.h"
 
 
 
- 
+
 void WifiTools::setDebug( bool isDebug ){
   _isDebug = isDebug;
 }
@@ -71,6 +72,25 @@ void WifiTools::connectToWifi( const char ssid[] , const char pass[] ){
 }
 
 
+bool WifiTools::hostByName( char hostname[], IPAddress &plugIP ){
+  bool founded = false;
+
+  if( _isDebug ){
+    Serial.println( "Launching research of plug IP" );
+  }
+
+  WiFi.hostByName(hostname, plugIP);
+
+  if( plugIP[0] != 0 ){
+    founded = true;
+    if( _isDebug ){
+      Serial.print("Plug found at ");
+      Serial.println(plugIP);
+    }
+  }
+  return founded;
+}
+
 void WifiTools::printWifiData(){
   if( !_isDebug )
     return;
@@ -81,13 +101,13 @@ void WifiTools::printWifiData(){
 
   // print your board's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+  Serial.print(" IP Address: ");
+  Serial.print(ip);
 
   // print your MAC address:
   byte mac[6];
   WiFi.macAddress(mac);
-  Serial.print("MAC address: ");
+  Serial.print(" MAC address: ");
   printMacAddress(mac);
 }
 

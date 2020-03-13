@@ -31,6 +31,7 @@ class WifiTools{
     String _pass;
 
   public:
+
     /*
      * Define if this lib will print on Serial
      */
@@ -45,6 +46,11 @@ class WifiTools{
      * Launch a connection on the Hotspot specified
      */
     void connectToWifi( const char ssid[] , const char pass[] );
+
+    /*
+     * Search the IP of the requested hostname
+     */
+    bool hostByName( char hostname[], IPAddress &plugIP );
 
     /*
      * Print subnet mask, local IP and MAC address
