@@ -87,9 +87,10 @@ int appMode = APPMODE_SEARCHING;      // Stock the Application mode // Here we d
 
 ////////////////
 // GLOBAL VARIABLES
-int buttonState = LOW;                // state of the push button
-bool onOff 		= false;              // current state of the plug
-bool isDebug 	= true;               // Enable application to print on Serial
+int buttonState  = LOW;                // state of the push button
+bool onOff 		 = false;              // current state of the plug
+bool isDebug 	 = true;               // Enable application to print on Serial
+long waitingTime = 5000;               // Waiting time to retry hostByName
 
 
 
@@ -136,7 +137,12 @@ void loop()
       
 	  }else{
 		// if IP not found, wait a few second and relaunch research
-		delay(5000);
+        if( isDebug ){
+          Serial.print( "Waiting " );
+          Serial.print( waitingTime/1000 );
+          Serial.print( "s and trying again..." );
+        }
+		delay(waitingTime);
 	  }
 
       break;

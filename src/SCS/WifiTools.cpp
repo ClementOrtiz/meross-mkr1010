@@ -87,7 +87,9 @@ bool WifiTools::hostByName( char hostname[], IPAddress &plugIP ){
       Serial.print("Plug found at ");
       Serial.println(plugIP);
     }
-  }
+  }else if( _isDebug ){
+      Serial.println("Plug not found ");
+    }
   return founded;
 }
 
