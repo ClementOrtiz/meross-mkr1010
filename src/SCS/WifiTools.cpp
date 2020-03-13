@@ -1,4 +1,4 @@
-#include <EEPROM.h>
+
 #include "WiFi.h"
 #include "WifiTools.h"
 
