@@ -63,7 +63,6 @@ WifiTools wTools;
 ////////////////
 // PIN
 #define BUTTON_PIN 0                  // Button pin number
-#define BUTTON_POWER_PIN 6            // Button power pin number => ensure that "BUTTON_PIN" receive 3.3v instead of 5v that it's not recommended
 
 
 ////////////////
@@ -88,8 +87,8 @@ int appMode = APPMODE_SEARCHING;      // Stock the Application mode // Here we d
 ////////////////
 // GLOBAL VARIABLES
 int buttonState  = LOW;                // state of the push button
-bool onOff 		 = false;              // current state of the plug
-bool isDebug 	 = true;               // Enable application to print on Serial
+bool onOff 		 = false;                // current state of the plug
+bool isDebug 	 = true;                 // Enable application to print on Serial
 long waitingTime = 5000;               // Waiting time to retry hostByName
 
 
@@ -105,7 +104,6 @@ void setup()
   
   // Defining electrical way 
   pinMode( BUTTON_PIN, INPUT ); 
-  pinMode( BUTTON_POWER_PIN, OUTPUT );
 
   // wait for serial port to connect. Needed for native USB port only
   while (!Serial); 
@@ -127,8 +125,8 @@ void loop()
       }
 	  
 	  // Launch the plug's IP research
-      if( wTools.hostByName( MEROSS_HOSTNAME, serverMSS210) ){
-		// if IP found, change application mode to "Sending"
+    if( wTools.hostByName( MEROSS_HOSTNAME, serverMSS210) ){
+        // if IP found, change application mode to "Sending"
         appMode = APPMODE_SENDING;
 
         if( isDebug ){
@@ -136,7 +134,7 @@ void loop()
         }
       
 	  }else{
-		// if IP not found, wait a few second and relaunch research
+        // if IP not found, wait a few second and relaunch research
         if( isDebug ){
           Serial.print( "Waiting " );
           Serial.print( waitingTime/1000 );
@@ -148,11 +146,11 @@ void loop()
       break;
     }
     case APPMODE_SENDING :
-	  // if app on "Sending" mode, launch On/Off manager
+      // if app on "Sending" mode, launch On/Off manager
       onOffMode();
       break;
     default :
-      Serial.println("Unknow Mode, application will stop");
+      Serial.println("Unknown Mode, application will stop");
       while (true);
   }
 
