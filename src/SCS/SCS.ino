@@ -112,7 +112,7 @@ void setup()
   wTools.connectToWifi( SECRET_SSID, SECRET_PASS );
 
   // Once every thing is done, power up the button
-  digitalWrite( BUTTON_POWER_PIN, HIGH );
+  //digitalWrite( BUTTON_POWER_PIN, HIGH );
 }
 
 void loop()
