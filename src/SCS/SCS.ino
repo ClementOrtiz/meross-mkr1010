@@ -54,8 +54,8 @@
 
 ////////////////
 // WIFI
-#define SECRET_SSID "Bbox-FF996433"   // to be replaced by your router SSID
-#define SECRET_PASS "34D476DC271ED15A1E165FFAF241AD"
+#define SECRET_SSID "Livebox-07B2" //"Bbox-FF996433"   // to be replaced by your router SSID
+#define SECRET_PASS "ED31675ECC219A7C57DADC127D" //"34D476DC271ED15A1E165FFAF241AD"
 WiFiClient myClient;
 WifiTools wTools;
 
@@ -68,12 +68,12 @@ WifiTools wTools;
 ////////////////
 // COMMUNICATION
 int portMSS210 = 80;                  // comon port for HTTP communication
-IPAddress serverMSS210(0, 0, 0, 0);   // container for the plug's IP
+IPAddress serverMSS210(192, 168, 1, 14);   // container for the plug's IP
 // Took from sniffed frames : (follow https://github.com/ClementOrtiz/meross-mkr1010/wiki/Retrieving-Meross'-plug-frame-from-an-Ubuntu-OS to retriece them)
-#define MEROSS_APP_TOKEN "551099-ef1d9fe37442284be4a06684de36c43d"
-#define MEROSS_MSG_ID    "bdf5a8a37e18f8261ce7623687efcc21"
-#define MEROSS_SIGN      "09ee94a666bf3f322ab3240bec0a6bc0"
-#define MEROSS_HOSTNAME  "Meross_Smart_Plug"
+#define MEROSS_APP_TOKEN "551099-255910cc5b1fa6ae07c6955441e14c66"
+#define MEROSS_MSG_ID    "015a32224121606ab6c94f31e4bd8e81"
+#define MEROSS_SIGN      "5f8f0d7ea7bd27b33e5920e9fec7425e"
+#define MEROSS_HOSTNAME  "merosssmartplug"
 WifiInterrupt merossPlug (myClient, MEROSS_APP_TOKEN, MEROSS_MSG_ID, MEROSS_SIGN);
 
 
@@ -110,9 +110,6 @@ void setup()
 
   // Launch the connection to the previously defined WIFI
   wTools.connectToWifi( SECRET_SSID, SECRET_PASS );
-
-  // Once every thing is done, power up the button
-  digitalWrite( BUTTON_POWER_PIN, HIGH );
 }
 
 void loop()
@@ -130,7 +127,7 @@ void loop()
         appMode = APPMODE_SENDING;
 
         if( isDebug ){
-          Serial.println( "\n=============================\nApplication's now wainting for sending queries to plug" );
+          Serial.println( "\n=============================\nApplication's now waiting for sending queries to plug" );
         }
       
 	  }else{
