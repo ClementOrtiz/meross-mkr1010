@@ -45,9 +45,9 @@ void WifiInterrupt::setPort( int port ){
 }
 
 String WifiInterrupt::preparePayLoad( boolean onOffStatus ){
-  return String("{\"header\":{\"from\":\"/app/")+
+  return String("{\"header\":{\"from\":\"")+
       _merossAppToken +
-      "/subscribe\",\"messageId\":\""+
+      "\",\"messageId\":\""+
       _merossMsgId +
       "\",\"method\":\"SET\",\"namespace\":\"Appliance.Control.ToggleX\",\"payloadVersion\":1,\"sign\":\""+
        _merossSign +
