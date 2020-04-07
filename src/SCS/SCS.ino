@@ -82,6 +82,7 @@ WifiInterrupt merossPlug (myClient, MEROSS_FROM, MEROSS_MSG_ID, MEROSS_SIGN);
 #define APPMODE_SEARCHING 0           // Application is searching for plug's IP
 #define APPMODE_SENDING   1           // Application is waiting to send orders
 int appMode = APPMODE_SEARCHING;      // Stock the Application mode // Here we define the default starting mode
+bool waitForSerial = false;           // If 'true', application will wait on start-up that user connect to serial port console
 
 
 ////////////////
@@ -106,7 +107,9 @@ void setup()
   pinMode( BUTTON_PIN, INPUT ); 
 
   // wait for serial port to connect. Needed for native USB port only
-  while (!Serial); 
+  if( waitForSerial ){
+    while (!Serial);
+  }
 
   // Launch the connection to the previously defined WIFI
   wTools.connectToWifi( SECRET_SSID, SECRET_PASS );
