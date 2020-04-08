@@ -1,20 +1,30 @@
-/*
-  WifiTools.h - Library for Arduino MKR WIFI 1010.
+/**************************************************************************\
+	Author : Clément ORTIZ
+	Society : Decasoft
+	Date : 13/03/2020
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+	Files needed : 
+		- WifiTools.h
+		- WifiTools.cpp
+	Dependencies :
+		- Arduino.h
+		- WiFi.h
+	Copyright :
+    This work is made available under the terms of the
+    Creative Commons Attribution 4.0 International License.
+    http://creativecommons.org/licenses/by/4.0
+	___________________________________________________________________
+	
+	This Arduino file is the continuation of Mickaël Cherouise's work.
+	https://github.com/isosel/meross-mkr1010
+	___________________________________________________________________
+	
+	This Library is an encapsulation of technical and graphical functions.
+	It help for wifi connection and check if connection still alive.
+	Also help to find host by name.
+	3 functions are dedicated to print information about Wifi and Lan
+	
+\**************************************************************************/
 
 #ifndef WifiTools_h
 #define WifiTools_h

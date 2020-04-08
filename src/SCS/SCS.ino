@@ -17,6 +17,10 @@
 		- Arduino.h
 		- SPI.h
 		- WiFiNINA.h
+	Copyright :
+    This work is made available under the terms of the
+    Creative Commons Attribution 4.0 International License.
+    http://creativecommons.org/licenses/by/4.0
 	___________________________________________________________________
 	
 	This Arduino file is the continuation of Mickaël Cherouise's work.

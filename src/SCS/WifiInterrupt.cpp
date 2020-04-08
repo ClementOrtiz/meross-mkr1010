@@ -1,24 +1,41 @@
-/*
-  WifiInterrupt.cpp - Library for Arduino MKR WIFI 1010.
+/**************************************************************************\
+	Author : Clément ORTIZ
+	Society : Decasoft
+	Date : 13/03/2020
 
-  Needs WifiNINA library under licence :
-  Copyright (c) 2018 Arduino SA. All rights reserved.
-  Copyright (c) 2011-2014 Arduino LLC.  All right reserved.
-
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+	Files needed : 
+		- WifiInterrupt.h
+		- WifiInterrupt.cpp
+	Dependencies :
+		- Arduino.h
+		- IPAddress.h
+		- WiFiClient.h
+	Copyright :
+    This work is made available under the terms of the
+    Creative Commons Attribution 4.0 International License.
+    http://creativecommons.org/licenses/by/4.0
+	___________________________________________________________________
+	
+	This Arduino file is the continuation of Mickaël Cherouise's work.
+	https://github.com/isosel/meross-mkr1010
+	___________________________________________________________________
+	
+	This Library is an encapsulation of the function to use Meross's Smart Plug
+	as an Interruptor.
+	It facilitate the access of On/Off switching that allow this Meross' Smart
+	Plug.
+	
+	To use it, you need to instantiate an Object giving data from sniffed frame
+	- from
+	- message_id
+	- sign
+	
+	Then you just have to call "sendSwitchWithMerossJson" function giving :
+	- Meross Smart Plug IP address
+	- a boolean indicating if you'd like to switch On or Off
+	- an Optionnal reference of a String object to retrieve the respond of the plug
+	
+\**************************************************************************/
 
 #include <Arduino.h>
 #include "WifiInterrupt.h"
@@ -28,9 +45,9 @@ WifiInterrupt::WifiInterrupt( WiFiClient client ):
 {
 }
 
-WifiInterrupt::WifiInterrupt( WiFiClient client, String merossAppToken, String merossMsgId, String merossSign ):
+WifiInterrupt::WifiInterrupt( WiFiClient client, String merossFrom, String merossMsgId, String merossSign ):
   _client(client),
-  _merossAppToken(merossAppToken),
+  _merossFrom(merossFrom),
   _merossMsgId(merossMsgId),
   _merossSign(merossSign)
 {
@@ -46,7 +63,7 @@ void WifiInterrupt::setPort( int port ){
 
 String WifiInterrupt::preparePayLoad( boolean onOffStatus ){
   return String("{\"header\":{\"from\":\"")+
-      _merossAppToken +
+      _merossFrom +
       "\",\"messageId\":\""+
       _merossMsgId +
       "\",\"method\":\"SET\",\"namespace\":\"Appliance.Control.ToggleX\",\"payloadVersion\":1,\"sign\":\""+
