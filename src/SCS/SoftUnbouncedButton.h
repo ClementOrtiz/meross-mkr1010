@@ -19,25 +19,29 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef Button_h
-#define Button_h
+#ifndef SoftUnbouncedButton_h
+#define SoftUnbouncedButton_h
 
-class Button{
+class SoftUnbouncedButton{
 	private:
 		int _pinNumber;
-		boolean _state = false;
-		boolean _recording = false;
+		bool _isDebug = false;
+		bool _switchState = false;
+		bool _currentState = false;
+		bool _recordingCurrent = false;
+		bool _recordingSwitch = false;
 		long _tsLastState = 0;
 		
 		long _pollingInterval = 20;
 		
 	public :
-		Button( int pinNumber );
-		Button( int pinNumber, bool initialState  );
-    Button( int pinNumber, bool initialState, long pollingInterval );
+		SoftUnbouncedButton( int pinNumber );
+		SoftUnbouncedButton( int pinNumber, bool initialState  );
+		SoftUnbouncedButton( int pinNumber, bool initialState, long pollingInterval );
 		
 		bool getUnbouncedState();
 		bool getSwitchState();
+		void setDebug( bool debug );
 		
 };
 

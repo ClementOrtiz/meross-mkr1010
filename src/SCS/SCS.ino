@@ -51,6 +51,7 @@
 #include <WiFiNINA.h>
 #include "WifiInterrupt.h"
 #include "WifiTools.h"
+#include "SoftUnbouncedButton.h"
 
 ////////////////
 // WIFI
@@ -79,10 +80,11 @@ WifiInterrupt merossPlug (myClient, MEROSS_FROM, MEROSS_MSG_ID, MEROSS_SIGN);
 
 ////////////////
 // APPLICATION MODES
-#define APPMODE_SEARCHING 0           // Application is searching for plug's IP
-#define APPMODE_SENDING   1           // Application is waiting to send orders
-int appMode = APPMODE_SEARCHING;      // Stock the Application mode // Here we define the default starting mode
-bool waitForSerial = false;           // If 'true', application will wait on start-up that user connect to serial port console
+#define APPMODE_SEARCHING       0     // Application is searching for plug's IP
+#define APPMODE_SENDING         1     // Application is waiting to send orders
+#define APPMODE_UNBOUNCE_TEST   2     // Application is in test mode for unbounced button
+int appMode = APPMODE_UNBOUNCE_TEST;  // Stock the Application mode // Here we define the default starting mode
+bool waitForSerial = true;           // If 'true', application will wait on start-up that user connect to serial port console
 
 
 ////////////////
@@ -91,6 +93,7 @@ int buttonState  = LOW;                // state of the push button
 bool onOff 		 = false;                // current state of the plug
 bool isDebug 	 = true;                 // Enable application to print on Serial
 long waitingTime = 5000;               // Waiting time to retry hostByName
+SoftUnbouncedButton suButton (BUTTON_PIN); // 
 
 
 
@@ -99,6 +102,9 @@ void setup()
   // Set on debug for lib's verbose on Serial
   merossPlug.setDebug(isDebug);
   wTools.setDebug(isDebug);
+  if( appMode == APPMODE_UNBOUNCE_TEST ){
+    suButton.setDebug(isDebug);
+  }
 
   //Initialize serial and wait for port to open:
   Serial.begin( 9600 );
@@ -112,7 +118,13 @@ void setup()
   }
 
   // Launch the connection to the previously defined WIFI
-  wTools.connectToWifi( SECRET_SSID, SECRET_PASS );
+  if( appMode != APPMODE_UNBOUNCE_TEST ){
+    wTools.connectToWifi( SECRET_SSID, SECRET_PASS );
+  }else{
+    Serial.println("Let's go!");
+    // initialize digital pin LED_BUILTIN as an output.
+    pinMode(LED_BUILTIN, OUTPUT);
+  }
 }
 
 void loop()
@@ -149,13 +161,26 @@ void loop()
       // if app on "Sending" mode, launch On/Off manager
       onOffMode();
       break;
+    case APPMODE_UNBOUNCE_TEST :{
+      bool state = suButton.getSwitchState();
+      //Serial.print( "SwitchState " );
+      //Serial.println( state );
+      if( state ){
+        digitalWrite(LED_BUILTIN, HIGH);
+      }else{
+        digitalWrite(LED_BUILTIN, LOW);
+      }
+      break;
+    }
     default :
       Serial.println("Unknown Mode, application will stop");
       while (true);
   }
 
   // Checking if WiFi connection still up
-  wTools.checkConnection();
+  if( appMode != APPMODE_UNBOUNCE_TEST ){
+    wTools.checkConnection();
+  }
 }
 
 

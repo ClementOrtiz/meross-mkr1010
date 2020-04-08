@@ -21,23 +21,24 @@
 
 
 #include <Arduino.h>
+#include "SoftUnbouncedButton.h"
 
 
 
-Button::Button( int pinNumber ):
+SoftUnbouncedButton::SoftUnbouncedButton( int pinNumber ):
 	_pinNumber(pinNumber),
 	_tsLastState(millis())
 {
 }
 
-Button::Button( int pinNumber, bool initialState  ):
+SoftUnbouncedButton::SoftUnbouncedButton( int pinNumber, bool initialState  ):
 	_pinNumber(pinNumber),
 	_tsLastState(millis()),
 	_switchState(initialState)
 {
 }
 
-Button::Button( int pinNumber, bool initialState, long pollingInterval ):
+SoftUnbouncedButton::SoftUnbouncedButton( int pinNumber, bool initialState, long pollingInterval ):
 	_pinNumber(pinNumber),
 	_tsLastState(millis()),
 	_switchState(initialState),
@@ -45,23 +46,29 @@ Button::Button( int pinNumber, bool initialState, long pollingInterval ):
 {
 }
 
-bool Button::getUnbouncedState(){
+bool SoftUnbouncedButton::getUnbouncedState(){
 	// Reading Button's pin state
 	long tmpState = digitalRead( _pinNumber );
 
 	// If button state has changed
 	if( tmpState != _currentState ){
 		// Are we recording? Are we waiting for bounce to stop?
-		if( !_recording ){
+		if( !_recordingCurrent ){
+			if(_isDebug){
+				Serial.println("Starting recording");
+			}
 			// Start recording
-			_recording = true;
+			_recordingCurrent = true;
 			// and store current time stamp
 			_tsLastState = millis();
 		
 		// If Recording , do we have passed the polling interval?
 		}else if(millis() - _tsLastState > _pollingInterval ){
+			if(_isDebug){
+				Serial.println("Stop recording : Changing button state");
+			}
 			// Stop recording
-			_recording = false;
+			_recordingCurrent = false;
 			// Change state value
 			_currentState = !_currentState;
 		}
@@ -70,10 +77,26 @@ bool Button::getUnbouncedState(){
 	return _currentState;
 }
 
-bool Button::getSwitchState(){
+bool SoftUnbouncedButton::getSwitchState(){
 	bool tmpSwtSt = getUnbouncedState();
-	
-	if( tmpSwtSt != _switchState ){
+
+	if( tmpSwtSt ){
+		_recordingSwitch = true;
+	}
+	else if( _recordingSwitch ){
+    _recordingSwitch = false;
 		_switchState = !_switchState;
+	
+	if(_isDebug){
+        Serial.print( "Switch changed " );
+        Serial.println( _switchState );
+	}
 	}		
+
+  return _switchState;
+}
+
+
+void SoftUnbouncedButton::setDebug( bool debug ){
+	_isDebug = debug;
 }
