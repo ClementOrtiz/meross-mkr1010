@@ -1,23 +1,38 @@
-/*
-  Button.cpp  - Library for Arduino MKR WIFI 1010.
+/**************************************************************************\
+	Author : Clément ORTIZ
+	Society : Decasoft
+	Date : 13/03/2020
 
-  Copyright (c) 2018 Arduino SA. All rights reserved.
-  Copyright (c) 2011-2014 Arduino LLC.  All right reserved.
-
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+	Files needed : 
+		- SoftUnbouncedButton.h
+		- SoftUnbouncedButton.cpp
+	Dependencies :
+		- Arduino.h
+	Copyright :
+    This work is made available under the terms of the
+    Creative Commons Attribution 4.0 International License.
+    http://creativecommons.org/licenses/by/4.0
+	___________________________________________________________________
+	
+	This Arduino file is the continuation of Mickaël Cherouise's work.
+	https://github.com/isosel/meross-mkr1010
+	___________________________________________________________________
+	
+	This Library is an encapsulation of function that manage the bounce of a push-button.
+	On first incoming front, it launch a timer to avoid picking bounced information.
+	
+	To use it, you need to instantiate a SoftUnbouncedButton giving at least
+	the pin number on witch the button is connected.
+	(You can also use 2 other constructor that allow you to set the initial state (On or Off)
+	and an other allows to set the minimal interval to read final state.)
+	
+	Then call periodically the function "getUnbouncedState" will give you a boolean
+	indicating the state of the pin.
+	Calling periodically the function "getSwitchState" will give you a boolean
+	indicating the "switch state".
+	"Switch state" is a logical value that change each time a up front is detected
+	with "getUnbouncedState" function.	
+\**************************************************************************/
 
 
 #include <Arduino.h>
@@ -87,10 +102,10 @@ bool SoftUnbouncedButton::getSwitchState(){
     _recordingSwitch = false;
 		_switchState = !_switchState;
 	
-	if(_isDebug){
-        Serial.print( "Switch changed " );
-        Serial.println( _switchState );
-	}
+		if(_isDebug){
+					Serial.print( "Switch changed " );
+					Serial.println( _switchState );
+		}
 	}		
 
   return _switchState;

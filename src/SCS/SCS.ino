@@ -55,6 +55,7 @@
 #include <WiFiNINA.h>
 #include "WifiInterrupt.h"
 #include "WifiTools.h"
+#include "SoftUnbouncedButton.h"
 
 ////////////////
 // WIFI
@@ -67,6 +68,9 @@ WifiTools wTools;
 ////////////////
 // PIN
 #define BUTTON_PIN 0                  // Button pin number
+boolean onOff = false;                 // Store the plug state (false = OFF by default)
+SoftUnbouncedButton button(BUTTON_PIN, onOff, 20); // SoftUnbouncedButton on pin20=>A5, starting in OFF state, waiting 20ms before read
+
 
 
 ////////////////
@@ -85,16 +89,15 @@ WifiInterrupt merossPlug (myClient, MEROSS_FROM, MEROSS_MSG_ID, MEROSS_SIGN);
 // APPLICATION MODES
 #define APPMODE_SEARCHING 0           // Application is searching for plug's IP
 #define APPMODE_SENDING   1           // Application is waiting to send orders
-int appMode = APPMODE_SEARCHING;      // Stock the Application mode // Here we define the default starting mode
-bool waitForSerial = false;           // If 'true', application will wait on start-up that user connect to serial port console
+#define APPMODE_BTN_TEST  2           // Application is button test mode
+int appMode = APPMODE_BTN_TEST;      // Stores the Application mode => Here we define the default starting mode
 
 
 ////////////////
 // GLOBAL VARIABLES
-int buttonState  = LOW;                // state of the push button
-bool onOff 		 = false;                // current state of the plug
 bool isDebug 	 = true;                 // Enable application to print on Serial
 long waitingTime = 5000;               // Waiting time to retry hostByName
+bool waitForSerial = true;           // If 'true', application will wait on start-up that user connect to serial port console
 
 
 
@@ -103,6 +106,7 @@ void setup()
   // Set on debug for lib's verbose on Serial
   merossPlug.setDebug(isDebug);
   wTools.setDebug(isDebug);
+  button.setDebug(false); // we don't want to see button debug's informations
 
   //Initialize serial and wait for port to open:
   Serial.begin( 9600 );
@@ -116,7 +120,11 @@ void setup()
   }
 
   // Launch the connection to the previously defined WIFI
-  wTools.connectToWifi( SECRET_SSID, SECRET_PASS );
+  if( appMode != APPMODE_BTN_TEST ){
+    wTools.connectToWifi( SECRET_SSID, SECRET_PASS );
+  }else{
+    Serial.println("App in Button test mode. Please click button");
+  }
 }
 
 void loop()
@@ -153,13 +161,28 @@ void loop()
       // if app on "Sending" mode, launch On/Off manager
       onOffMode();
       break;
+    case APPMODE_BTN_TEST :{
+      bool state = button.getSwitchState();
+      if( state != onOff ){
+        onOff = state;
+        
+        if( onOff ){
+          Serial.println("ON command received");
+        }else{
+          Serial.println("OFF command received");
+        }
+      }
+      break;
+    }
     default :
       Serial.println("Unknown Mode, application will stop");
       while (true);
   }
 
   // Checking if WiFi connection still up
-  wTools.checkConnection();
+  if( appMode != APPMODE_BTN_TEST ){
+    wTools.checkConnection();
+  }
 }
 
 
@@ -174,20 +197,11 @@ void loop()
  */
 void onOffMode(){
   // Reading Button's pin state
-  buttonState = digitalRead( BUTTON_PIN );
-
-  // if button is pushed, send query to plug
-  if(buttonState == HIGH){
-    int success = merossPlug.sendSwitchWithMerossJson( serverMSS210, onOff );
-
-    // if querying was a success, change OnOff indicator status
-    if( success == REQUEST_OK ){
-      onOff = !onOff;
-    }
-
-    // and wait if the button is still holded...
-    while( digitalRead(BUTTON_PIN) == HIGH ){
-      delay(100);
-    }
+  bool state = button.getSwitchState();
+  // if state changed
+  if( state != onOff ){
+    // send query to plug
+    merossPlug.sendSwitchWithMerossJson( serverMSS210, onOff );
+    onOff = state;
   }
 }
