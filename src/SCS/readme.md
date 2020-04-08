@@ -1,26 +1,26 @@
 # SCS project
-    Author : Clément ORTIZ<br/>
-	Society : Decasoft<br/>
-	Date : 13/03/2020<br/>
-	Hardware : <br/>
-		- Arduino MKR Wifi 1010<br/>
-		- Push button<br/>
-		- 10k resistor<br/>
-		- optionally light capacitor<br/>
-	Files : <br/>
-		- SCS.ino<br/>
-		- WifiInterrupt.h<br/>
-		- WifiInterrupt.cpp<br/>
-		- WifiTools.h<br/>
-		- WifiTools.cpp<br/>
-	Dependencies :<br/>
-		- Arduino.h<br/>
-		- SPI.h<br/>
-		- WiFiNINA.h<br/>
-	Copyright :<br/>
-    This work is made available under the terms of the<br/>
-    Creative Commons Attribution 4.0 International License.<br/>
-    http://creativecommons.org/licenses/by/4.0<br/>
+    Author : Clément ORTIZ
+	Society : Decasoft
+	Date : 13/03/2020
+	Hardware : 
+		- Arduino MKR Wifi 1010
+		- Push button
+		- 10k resistor
+		- optionally light capacitor
+	Files : 
+		- SCS.ino
+		- WifiInterrupt.h
+		- WifiInterrupt.cpp
+		- WifiTools.h
+		- WifiTools.cpp
+	Dependencies :
+		- Arduino.h
+		- SPI.h
+		- WiFiNINA.h
+	Copyright :
+    This work is made available under the terms of the
+    Creative Commons Attribution 4.0 International License.
+    http://creativecommons.org/licenses/by/4.0
 	___________________________________________________________________
 	
 	This Arduino file is the continuation of Mickaël Cherouise's work.
