@@ -5,8 +5,10 @@
 	Hardware : 
 		- Arduino MKR Wifi 1010
 		- Push button
-		- 10k resistor
-		- optionally light capacitor
+		- 47k resistor
+		- optionally light capacitor (1µF-10µF)
+	All this hardware is compatible with the SCS project. (see below for more details)
+	SCS Official electronic schema : https://github.com/AIREL46/SCAO/raw/master/kicad/e-p-wifi-shield/e-p-wifi.png 
 	Files : 
 		- SCS.ino
 		- WifiInterrupt.h
@@ -17,9 +19,9 @@
 		- Arduino.h
 		- SPI.h
 		- WiFiNINA.h
-	Copyright :
+	License :
     This work is made available under the terms of the
-    Creative Commons Attribution 4.0 International License.
+    Creative Commons Attribution BY 4.0 International License.
     http://creativecommons.org/licenses/by/4.0
 	___________________________________________________________________
 	
@@ -27,8 +29,8 @@
 	https://github.com/isosel/meross-mkr1010
 	___________________________________________________________________
 	
-	This application is driven by the SCS (Smart Cooking System) projet
-	developped by A3C Presqu'île association.
+	This application is driven by the SCS (Smart Cooking System) project
+	developed by A3C Presqu'île association.
 	
 	The goal of those files is to make a POC (Proof Of Concept) on how 
 	to drive a WiFi Meross smart plug with a MKR Wifi 1010.
@@ -44,11 +46,11 @@
 	Having an example of the frame sent by the Android application.
 	*	Meross'plug communication is based on a combination of 
 		messageID and handshake/token.
-		Its algorithm is purelly constructor and not replicated in this 
+		Its algorithm is purely constructor and not replicated in this 
 		POC.
 	* 	So it's needed to reproduce sniff describe in this wiki :
 		https://github.com/ClementOrtiz/meross-mkr1010/wiki/Retrieving-Meross'-plug-frame-from-an-Ubuntu-OS
-		To ensure that this programm has the right messageIP and token
+		To ensure that this program has the right messageIP and token
 \**************************************************************************/
 
 #include <SPI.h>
@@ -67,7 +69,7 @@ WifiTools wTools;
 
 ////////////////
 // PIN
-#define BUTTON_PIN 0                  // Button pin number
+#define BUTTON_PIN 20                  // Button pin number
 boolean onOff = false;                 // Store the plug state (false = OFF by default)
 SoftUnbouncedButton button(BUTTON_PIN, onOff, 20); // SoftUnbouncedButton on pin20=>A5, starting in OFF state, waiting 20ms before read
 
@@ -90,7 +92,7 @@ WifiInterrupt merossPlug (myClient, MEROSS_FROM, MEROSS_MSG_ID, MEROSS_SIGN);
 #define APPMODE_SEARCHING 0           // Application is searching for plug's IP
 #define APPMODE_SENDING   1           // Application is waiting to send orders
 #define APPMODE_BTN_TEST  2           // Application is button test mode
-int appMode = APPMODE_BTN_TEST;      // Stores the Application mode => Here we define the default starting mode
+int appMode = APPMODE_SENDING;      // Stores the Application mode => Here we define the default starting mode
 
 
 ////////////////

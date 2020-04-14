@@ -9,9 +9,9 @@
 	Dependencies :
 		- Arduino.h
 		- WiFi.h
-	Copyright :
+	License :
     This work is made available under the terms of the
-    Creative Commons Attribution 4.0 International License.
+    Creative Commons Attribution BY 4.0 International License.
     http://creativecommons.org/licenses/by/4.0
 	___________________________________________________________________
 	

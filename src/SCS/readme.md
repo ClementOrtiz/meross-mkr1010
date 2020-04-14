@@ -6,7 +6,9 @@
 		- Arduino MKR Wifi 1010
 		- Push button
 		- 10k resistor
-		- optionally light capacitor
+		- optionally light capacitor (1µF-10µF)
+	All this hardware is compatible with the SCS project. (see below for more details)
+	SCS Official electronic schema : https://github.com/AIREL46/SCAO/raw/master/kicad/e-p-wifi-shield/e-p-wifi.png 
 	Files : 
 		- SCS.ino
 		- WifiInterrupt.h
@@ -17,9 +19,9 @@
 		- Arduino.h
 		- SPI.h
 		- WiFiNINA.h
-	Copyright :
+	License :
     This work is made available under the terms of the
-    Creative Commons Attribution 4.0 International License.
+    Creative Commons Attribution BY 4.0 International License.
     http://creativecommons.org/licenses/by/4.0
 	___________________________________________________________________
 	
