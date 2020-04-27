@@ -76,22 +76,23 @@ SoftUnbouncedButton button(BUTTON_PIN, onOff, 20); // SoftUnbouncedButton on pin
 
 
 ////////////////
-// COMMUNICATION
-int portMSS210 = 80;                  // comon port for HTTP communication
-IPAddress serverMSS210(192, 168, 1, 14);   // container for the plug's IP
+// MEROSS PLUG
 // Took from sniffed frames : (follow https://github.com/ClementOrtiz/meross-mkr1010/wiki/Retrieving-Meross'-plug-frame-from-an-Ubuntu-OS to retriece them)
 #define MEROSS_FROM      "/app/551099-255910cc5b1fa6ae07c6955441e14c66/subscribe"
 #define MEROSS_MSG_ID    "015a32224121606ab6c94f31e4bd8e81"
 #define MEROSS_SIGN      "5f8f0d7ea7bd27b33e5920e9fec7425e"
 #define MEROSS_HOSTNAME  "merosssmartplug"
+int portMSS210 = 80;                  // comon port for HTTP communication
+IPAddress serverMSS210(0, 0, 0, 0);   // container for the plug's IP
 WifiInterrupt merossPlug (myClient, MEROSS_FROM, MEROSS_MSG_ID, MEROSS_SIGN);
+
 
 
 ////////////////
 // APPLICATION MODES
 #define APPMODE_SEARCHING 0           // Application is searching for plug's IP
 #define APPMODE_SENDING   1           // Application is waiting to send orders
-#define APPMODE_BTN_TEST  2           // Application is button test mode
+#define APPMODE_BTN_TEST  2           // Application is in button test mode
 int appMode = APPMODE_SENDING;      // Stores the Application mode => Here we define the default starting mode
 
 
