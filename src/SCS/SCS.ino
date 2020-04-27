@@ -61,8 +61,8 @@
 
 ////////////////
 // WIFI
-#define SECRET_SSID "Livebox-07B2" //"Bbox-FF996433"   // to be replaced by your router SSID
-#define SECRET_PASS "ED31675ECC219A7C57DADC127D" //"34D476DC271ED15A1E165FFAF241AD"
+#define SECRET_SSID "XXXX"  // to be replaced by your router SSID
+#define SECRET_PASS "XXXX" 
 WiFiClient myClient;
 WifiTools wTools;
 
