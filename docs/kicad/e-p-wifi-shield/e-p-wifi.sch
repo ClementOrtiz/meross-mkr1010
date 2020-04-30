@@ -1144,29 +1144,15 @@ Wire Notes Line
 	2850 7316 2850 7155
 Wire Notes Line
 	4550 6350 4550 7316
-$Comp
-L e-p-wifi-rescue:Via V1
-U 1 1 5EAADEA1
-P 5700 3300
-F 0 "V1" H 5778 3263 50  0000 L CNN
-F 1 "Via" H 5778 3172 50  0000 L CNN
-F 2 "e-p-wifi-v2:Via-DIY" V 5630 3300 50  0001 C CNN
-F 3 "~" H 5700 3300 50  0001 C CNN
-	1    5700 3300
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	5350 3800 5700 3800
 Wire Wire Line
-	5700 2950 5700 3450
-Wire Wire Line
 	5600 3700 6700 3700
-Wire Wire Line
-	5700 3450 5700 3800
-Connection ~ 5700 3450
 Connection ~ 5700 3800
 Wire Wire Line
 	5700 3800 6250 3800
 Text Notes 5650 6261 0    150  ~ 30
 Shield MKR wifi 1010
+Wire Wire Line
+	5700 2950 5700 3800
 $EndSCHEMATC
