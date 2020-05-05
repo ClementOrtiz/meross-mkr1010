@@ -39,6 +39,8 @@
 #define B_SendToMeross_h
 
 #include <Arduino.h>
+#include <SPI.h>
+#include <WiFiNINA.h>
 #include "IPAddress.h"
 #include "WiFiClient.h"
 #include "WiFi.h"
@@ -158,7 +160,8 @@ class WifiInterrupt{
   private:
     int _port = 80;
     bool _isDebug = false;
-    WiFiClient _client;
+    WiFiClient *_client;
+		IPAddress _ip;
     String _merossFrom;
     String _merossMsgId;
     String _merossSign;
@@ -169,8 +172,8 @@ class WifiInterrupt{
     String preparePayLoad( boolean onOffStatus );
 
   public:
-    WifiInterrupt( WiFiClient client );
-    WifiInterrupt( WiFiClient client, String merossFrom, String merossMsgId, String merossSign );
+    WifiInterrupt( IPAddress ip );
+    WifiInterrupt( IPAddress ip, String merossFrom, String merossMsgId, String merossSign );
 
     /*
      * Define if this lib will print on Serial
@@ -185,17 +188,17 @@ class WifiInterrupt{
     /*
      * Send Meross'specific Json request to a defined IP and retrieve the RESPONSE
      */
-    int sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus, String &response );
+    int sendSwitchWithMerossJson( bool onOffStatus, String &response );
 
     /*
      * Send Meross'specific Json request to a defined IP and no matter the RESPONSE
      */
-    int sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus );
+    int sendSwitchWithMerossJson( bool onOffStatus );
 
     /*
      * Send given JSON to IP and retrieve the RESPONSE
      */
-    int sendJsonRequest( IPAddress ip, String jsonData, String &response );
+    int sendJsonRequest( String jsonData, String &response );
 
 };
 

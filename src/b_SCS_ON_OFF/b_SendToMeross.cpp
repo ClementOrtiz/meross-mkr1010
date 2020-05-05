@@ -82,17 +82,19 @@ void SoftUnbouncedButton::setDebug( bool debug ){
 
 
 
-WifiInterrupt::WifiInterrupt( WiFiClient client ):
-  _client(client)
+WifiInterrupt::WifiInterrupt( IPAddress ip ):
+_ip(ip)
 {
+	_client = new WiFiClient();
 }
 
-WifiInterrupt::WifiInterrupt( WiFiClient client, String merossFrom, String merossMsgId, String merossSign ):
-  _client(client),
-  _merossFrom(merossFrom),
+WifiInterrupt::WifiInterrupt( IPAddress ip, String merossFrom, String merossMsgId, String merossSign ):
+  _ip(ip),
+	_merossFrom(merossFrom),
   _merossMsgId(merossMsgId),
   _merossSign(merossSign)
 {
+	_client = new WiFiClient();
 }
 
 void WifiInterrupt::setDebug( bool isDebug ){
@@ -115,7 +117,7 @@ String WifiInterrupt::preparePayLoad( boolean onOffStatus ){
        "}}}";
 }
 
-int WifiInterrupt::sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus, String &response ){
+int WifiInterrupt::sendSwitchWithMerossJson( bool onOffStatus, String &response ){
   String payload = preparePayLoad( onOffStatus );
 
   // If we're on debug mode, print some verbose about sending query
@@ -123,13 +125,13 @@ int WifiInterrupt::sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus, Str
     Serial.print( "Sending ");
     Serial.print( onOffStatus ? "ON": "OFF");
     Serial.print( " query on ");
-    Serial.print( ip );
+    Serial.print( _ip );
     Serial.println( " with following payload :" );
     Serial.println( payload );
   }
 
 
-  int responseStatus = sendJsonRequest(ip, payload, response);
+  int responseStatus = sendJsonRequest( payload, response);
 
   // If we're on debug mode, print some verbose about response status
   if( _isDebug ){
@@ -155,19 +157,19 @@ int WifiInterrupt::sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus, Str
   return responseStatus;
 }
 
-int WifiInterrupt::sendSwitchWithMerossJson( IPAddress ip, bool onOffStatus ){
+int WifiInterrupt::sendSwitchWithMerossJson( bool onOffStatus ){
   String response = "";
-  return sendSwitchWithMerossJson(ip, onOffStatus, response);
+  return sendSwitchWithMerossJson(onOffStatus, response);
 }
 
-int WifiInterrupt::sendJsonRequest( IPAddress ip, String jsonData, String &response ){
+int WifiInterrupt::sendJsonRequest( String jsonData, String &response ){
   int cpt=0;
   // reset previous connection
-  _client.stop();
+  _client->stop();
 
   // If connection is successful, load payload with HTTP header
-  if( _client.connect( ip, _port )){
-    _client.print( // any spaces are important
+  if( _client->connect( _ip, _port )){
+    _client->print( // any spaces are important
       String("POST ") + "/config" + " HTTP/1.1\r\n" +
       "Content-Type: application/json\r\n" +
       "Content-Length: " + jsonData.length() + "\r\n" + //this line is needed with the exact size value
@@ -176,7 +178,7 @@ int WifiInterrupt::sendJsonRequest( IPAddress ip, String jsonData, String &respo
     );
 
     // wait until data reception
-    while( _client.available() == 0 ){
+    while( _client->available() == 0 ){
       cpt ++;
       delay( 100 );
       if (cpt > 49){
@@ -186,8 +188,8 @@ int WifiInterrupt::sendJsonRequest( IPAddress ip, String jsonData, String &respo
     }
 
     // write all incoming data characters to &response
-    while( _client.available() ){
-      response += (char)_client.read();
+    while( _client->available() ){
+      response += (char)_client->read();
     }
     return REQUEST_OK;
   }
