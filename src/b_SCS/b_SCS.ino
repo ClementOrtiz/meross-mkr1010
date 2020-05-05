@@ -48,7 +48,12 @@
 		To ensure that this program has the right messageIP and token
 \**************************************************************************/
 
-#include "SCS.h"
+#define BUTTON_PIN 20                  // Button pin number
+
+
+#include "b_data.h" //!\\ you need to modify data describe in this file
+
+#include "b_SCS.h"
 
 
 void setup()

@@ -26,11 +26,10 @@
 
 #include <SPI.h>
 #include <WiFiNINA.h>
-#include "B_SendToMeross.h"
+#include "b_SendToMeross.h"
 
 ////////////////////////////////////////
 // Data that you need to modify
-#define BUTTON_PIN 20                  // Button pin number
 
 #define SECRET_SSID "XXXX"  // to be replaced by your router SSID
 #define SECRET_PASS "XXXX"
